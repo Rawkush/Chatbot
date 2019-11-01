@@ -1,0 +1,6 @@
+flask
+pandas
+gunicorn
+xgboost
+torch
+
