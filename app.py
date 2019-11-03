@@ -13,9 +13,9 @@ import codecs
 import itertools
 import model
 import dataprocessing as dp
-from dataprocessing import voc
+from dataprocessing import Voc
 
-
+voc=Voc("data")
 
 USE_CUDA = torch.cuda.is_available()
 device = torch.device("cuda" if USE_CUDA else "cpu") # if true  GPU will be used instead of CPU
@@ -32,7 +32,6 @@ batch_size = 64
 MAX_LENGTH=10
 
 # Set checkpoint to load from; set to None if starting from scratch
-loadFilename = None
 checkpoint_iter = 4000
 loadFilename = os.path.join(path,
                             '{}_checkpoint.tar'.format(checkpoint_iter))
@@ -49,7 +48,6 @@ if loadFilename:
     decoder_optimizer_sd = checkpoint['de_opt']
     embedding_sd = checkpoint['embedding']
     voc.__dict__ = checkpoint['voc_dict']
-
 
 print('Building encoder and decoder ...')
 # Initialize word embeddings
@@ -86,9 +84,10 @@ def evaluate(encoder, decoder, searcher, voc, sentence, max_length=MAX_LENGTH):
     return decoded_words
 
 
-def evaluateInput(encoder, decoder, searcher, voc, ques):
+def evaluateInput(encoder, decoder, searcher, ques):
     input_sentence = ''
     try:
+        global voc
         # Get input sentence
         input_sentence = ques
         # Normalize sentence
@@ -135,7 +134,7 @@ def predict():
     # convert data into dataframe
     data=data["ques"]
     # predictions
-    result = evaluateInput(encoder, decoder, searcher, voc,data)
+    result = evaluateInput(encoder, decoder, searcher,data)
 
     # send back to browser
     output = {'results': result}

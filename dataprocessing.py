@@ -126,10 +126,6 @@ def loadPrepareData(datafile):
     return voc, pairs
 
 
-# Load/Assemble voc and pairs
-save_dir = os.path.join("data", "save")
-voc, pairs = loadPrepareData( datafile)
-
 
 MIN_COUNT = 3    # Minimum word count threshold for trimming
 
@@ -160,10 +156,6 @@ def trimRareWords(voc, pairs, MIN_COUNT):
 
     print("Trimmed from {} pairs to {}, {:.4f} of total".format(len(pairs), len(keep_pairs), len(keep_pairs) / len(pairs)))
     return keep_pairs
-
-
-# Trim voc and pairs
-pairs = trimRareWords(voc, pairs, MIN_COUNT)
 
 
 def indexesFromSentence(voc, sentence):
