@@ -22,7 +22,7 @@ Click==7.0
 cloudpickle==1.2.2
 colorama==0.4.1
 contextlib2==0.6.0
-cryptography==2.8
+cryptography==3.2
 cycler==0.10.0
 Cython==0.29.13
 cytoolz==0.10.0
