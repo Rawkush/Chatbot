@@ -1,0 +1,2 @@
+model_checkpoint_path: "/content/model.tflearn"
+all_model_checkpoint_paths: "/content/model.tflearn"
