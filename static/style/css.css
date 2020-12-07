@@ -1,0 +1,238 @@
+body {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  background: #8b0000;
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.container {
+  border: 0px solid black;
+  left: 10%;
+  position: relative;
+}
+
+.text-center {
+  position: relative;
+  border: 0px solid red;
+}
+
+.hd1 {
+  top: 0px;
+  width: 30%;
+  position: relative;
+}
+
+img {
+  right: 0;
+  -webkit-user-drag: none;
+  -moz-user-drag: none;
+  -khtml-user-drag: none;
+}
+
+a,
+a:hover,
+a:focus {
+  text-decoration: none;
+  outline: none;
+}
+
+.width100 {
+  width: 100%;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.container {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.hd1 {
+  position: absolute;
+  font-size: 50px;
+  font-weight: 100;
+}
+
+.footer {
+  border: 0px solid black;
+  margin-top: 40%;
+  position: relative;
+  bottom: 40px;
+  width: auto;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+}
+
+.foo-txt {
+  font-size: 25px;
+  font-weight: 400;
+  font-family: 'Satisfy', cursive;
+  text-shadow: none;
+  color: #272727;
+}
+
+.fa-heart {
+  color: #fb2323;
+}
+
+/* Demo end */
+
+/*----chat div---*/
+
+h3 {
+  color: black;
+  font-size: 20px;
+  margin-top: 3px;
+  text-align: center;
+}
+
+#chatbox {
+  margin-left: auto;
+  margin-right: auto;
+  width: 90%;
+  margin-top: 40%;
+  border: 0px solid black;
+
+}
+
+#chatbox img {
+  border-radius: 50%;
+}
+
+#userInput {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 10px;
+  height: 30px;
+  margin-top: 30px;
+  border: 1px solid rgb(100, 94, 94);
+  border-radius: 5px;
+}
+
+input {
+  height: 100%;
+  width: 100%;
+  padding-left: 5px;
+  border: none;
+  outline: none;
+  background: none;
+  border-radius: 10px;
+}
+
+.userText {
+  color: white;
+  font-family: monospace;
+  font-size: 17px;
+  text-align: right;
+  line-height: 30px;
+}
+
+.userText span {
+  background-color: #808080;
+  padding: 10px;
+  border-radius: 2px;
+}
+
+.botText {
+  color: white;
+  font-family: monospace;
+  font-size: 17px;
+  text-align: left;
+  line-height: 30px;
+}
+
+.botText span {
+  background-color: #4169e1;
+  padding: 10px;
+  border-radius: 2px;
+}
+
+.boxed {
+  position: fixed;
+  left: 70%;
+  top: 10px;
+  bottom: 10px;
+  transform: translate(-50%, -50%);
+  width: 40%;
+  margin-top: 20%;
+  border: 4px solid #eee;
+  border-radius: 10px;
+  background: #fff;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.main {
+  width: 70%;
+  left: 20%;
+  height: 20%;
+  font-style: italic;
+  align-content: center;
+  align-items: center;
+  border: 2px solid black;
+
+}
+
+.main {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.im {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.t {
+  position: relative;
+  border: 0px solid black;
+  float: right;
+  margin-right: 25%;
+  margin-top: 1px;
+  color: #fff;
+}
+
+span.blast {
+  display: inline-block;
+}
+
+span.blast.animated.bounce {
+  animation-name: rubberBand;
+  animation-duration: 0.9s;
+  animation-fill-mode: both;
+  animation-iteration-count: 1;
+  animation-name: rubberBand;
+}
+
+
+@keyframes rubberBand {
+    0% {
+      transform: scale(1);
+    }
+    30% {
+      transform: scaleX(1.25) scaleY(0.75);
+    }
+    40% {
+      transform: scaleX(0.75) scaleY(1.25);
+    }
+    60% {
+      transform: scaleX(1.15) scaleY(0.85);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  

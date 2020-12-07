@@ -6,7 +6,6 @@ stemmer = LancasterStemmer()
 import time
 import difflib
 import numpy
-import webbrowser
 import tflearn
 import tensorflow
 import random
@@ -27,7 +26,6 @@ except:
     labels =[]
     docs_patt = []
     docs_tag = []
-
 
     for intent in data["intents"]:
         # below we fetch patterns from all intents in one place
@@ -161,8 +159,7 @@ def chat(inp):
     while True:
         if inp.lower() == "bye":
             return "Good Bye!"
-            
-        
+             
         inp_x = word_checker(inp)
         print(inp_x)
 
@@ -194,21 +191,4 @@ def get_bot_response():
 
 if __name__ == "__main__":
         app.run()
-        """ 
-   print("*"*60)
-    time.sleep(1)
-    print("*"*40)
-    time.sleep(1)
-    print("*"*20)
-    time.sleep(1)
-    print("ChatBot will be launched in your web browser in..")
-    time.sleep(1)
-    print("3 sec")
-    time.sleep(1)
-    print("2 sec")
-    time.sleep(1)
-    print("1 sec")
-    time.sleep(1)
-    print("0 sec")
-    webbrowser.open("http://127.0.0.1:5000/") 
-    """
+ 
