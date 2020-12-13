@@ -3,7 +3,6 @@
 *.pth
 *.mp4
 *.gif
-*.json
 /old/*
 /.vscode/*
 /.ipynb_checckpoints/*
