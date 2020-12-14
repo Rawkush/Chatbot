@@ -10,8 +10,7 @@
  ![GitHub issues](https://img.shields.io/github/issues-raw/rawkush/chatbot)
  ![GitHub closed issues](https://img.shields.io/github/issues-closed/rawkush/chatbot) 
  ![GitHub last commit](https://img.shields.io/github/last-commit/rawkush/chatbot) 
-
- [![HitCount](http://hits.dwyl.com/rawkush/Chatbot.svg)](http://hits.dwyl.com/rawkush/Chatbot) 
+![ViewCount](https://views.whatilearened.today/views/github/rawkush/chatbot.svg)
  ![GitHub forks](https://img.shields.io/github/forks/rawkush/chatbot?label=fork&style=social) 
  ![GitHub](https://img.shields.io/github/license/rawkush/chatbot?style=plastic)
 
