@@ -8,6 +8,7 @@ import time
 import tensorflow as tf
 from tensorflow.keras import layers, models, regularizers
 from voc import voc
+import random
 
 nlp = English()
 tokenizer = nlp.Defaults.create_tokenizer(nlp)
@@ -41,7 +42,7 @@ def chat(inp):
         inp_x=inp.lower()
         results = predict(inp_x)
         response= getresponse(results)
-        return response[0]
+        return random.choice(response)
 
 @app.route("/")
 def home():
