@@ -9,4 +9,5 @@
 *.ipynb
 model.py
 test.py
+*.json
 

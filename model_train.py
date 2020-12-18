@@ -2,11 +2,8 @@ import numpy
 import json
 from sklearn.preprocessing import OneHotEncoder
 from spacy.lang.en import English
-from keras.models import Sequential
-from keras import layers
-from keras.models import Sequential
-from keras import layers
-from keras.layers import Dense
+import tensorflow as tf
+from tensorflow.keras import layers, models, regularizers
 import pickle
 
 nlp = English()
@@ -60,11 +57,13 @@ class voc:
     
     def getQuestionInNum(self, ques):
         words=self.tokenization(ques)
-        tmp=[ self.getIndexOfWord(wrds) for wrds in words]
-        while(len(tmp)<MAX_LENGTH):
-            tmp.append(PAD_Token)
+        #tmp=[ self.getIndexOfWord(wrds) for wrds in words]
+        tmp=[ 0 for i in range(self.num_words)]
+        for wrds in words:
+            tmp[self.getIndexOfWord(wrds)]=1
         return tmp
     
+ 
     def getTag(self, tag):
         return self.tags[tag]
     
@@ -101,7 +100,7 @@ x_train,y_train=splitDataset(data)
 x_train=numpy.array(x_train)
 y_train=numpy.array(y_train)
 #normalize
-x_train=x_train/255
+#x_train=x_train/255
 #reshape ytrain
 y_train = y_train.reshape((len(y_train), 1))
 
@@ -111,25 +110,22 @@ y_train=encoder.fit_transform(y_train)
 
 
 #intialising the ANN
-model = Sequential()
+model = models.Sequential()
 
 # adding first layer
-model.add(Dense(units = 12, kernel_initializer = 'uniform', activation = 'relu', input_dim = MAX_LENGTH))
-
+model.add(layers.Dense(units = 12, input_dim = len(x_train[0])))
+model.add(layers.Activation('relu'))
 #adding 2nd hidden layer
-model.add(Dense(units = 8, kernel_initializer = 'uniform', activation = 'relu'))
-
-
+model.add(layers.Dense(units = 8))
+model.add(layers.Activation('relu'))
 #adding output layer
-model.add(Dense(units = 38, kernel_initializer = 'uniform', activation = 'sigmoid'))
-#model.add(layers.Dropout(0.5))
-# compiling the ANN
+model.add(layers.Dense(units = 38))
+model.add(layers.Activation('softmax'))
 
 # Compiling the ANN
 model.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
-#model.compile(optimizer='rmsprop',loss='mse'
 # Fitting the ANN model to training set
-model.fit(x_train, y_train, batch_size = 10, epochs = 10000)
+model.fit(x_train, y_train, batch_size = 10, epochs = 100)
 
 model.save('mymodel.h5')
 

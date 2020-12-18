@@ -5,3 +5,4 @@
 *.ph
 *.pth
 __pycache__
+*.json

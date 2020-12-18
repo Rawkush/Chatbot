@@ -1,183 +1,109 @@
 
-import nltk
-from nltk.stem.lancaster import LancasterStemmer
-stemmer = LancasterStemmer()
-
-import time
-import difflib
+from sklearn.preprocessing import OneHotEncoder
+from spacy.lang.en import English
 import numpy
-import tflearn
-import tensorflow
-import random
 from flask import Flask, render_template, request
 import json
 import pickle
 import os
+import time
+import tensorflow as tf
+from tensorflow.keras import layers, models, regularizers
+
+nlp = English()
+tokenizer = nlp.Defaults.create_tokenizer(nlp)
+PAD_Token=0
 
 app = Flask(__name__)
-with open("intents.json") as file:
-    data = json.load(file)
+     
+model= models.load_model('mymodel.h5')
 
-try:
-    with open("data.pickle", "rb") as f:
-        words, labels, training, output = pickle.load(f)
-except:
-    words = []
-    labels =[]
-    docs_patt = []
-    docs_tag = []
+class voc:
+    
+    def __init__(self):
+        self.num_words= 1  # 0 is reserved for padding 
+        self.num_tags=0
+        self.tags={}
+        self.index2tags={}
+        self.questions={}
+        self.word2index={}
+        self.response={}
+  
+    def addWord(self,word):
+        if word not in self.word2index:
+            self.word2index[word] = self.num_words
+            self.num_words += 1
 
-    for intent in data["intents"]:
-        # below we fetch patterns from all intents in one place
-        for pattern in intent["patterns"]:
-            # below we put each word from pattern in the list wrds and then append it to words list and append the pattern in docs
-            wrds = nltk.word_tokenize(pattern)
-            for item in wrds:
-                words.extend(wrds)
-                docs_patt.append(wrds)
-                docs_tag.append(intent["tag"])
-                # here we add all labels in the list of labels
-                if intent["tag"] not in labels:
-                    labels.append(intent["tag"])
+    def addTags(self,tag):
+        if tag not in self.tags:
+            self.tags[tag]=self.num_tags
+            self.index2tags[self.num_tags]=tag
+            self.num_tags+=1
+    def addQuestion(self, question, answer):
+        self.questions[question]=answer
+        words=self.tokenization(question)
+        for  wrd in words:
+            self.addWord(wrd)
+                 
+    def tokenization(self,ques):
+        tokens = tokenizer(ques)
+        token_list = []
+        for token in tokens:
+            token_list.append(token.lemma_)
+        return token_list
+    
+    def getIndexOfWord(self,word):
+        return self.word2index[word]
+    
+    def getQuestionInNum(self, ques):
+        words=self.tokenization(ques)
+        #tmp=[ self.getIndexOfWord(wrds) for wrds in words]
+        tmp=[ 0 for i in range(self.num_words)]
+        for wrds in words:
+            tmp[self.getIndexOfWord(wrds)]=1
+        return tmp
+    
+ 
+    def getTag(self, tag):
+        return self.tags[tag]
+    
+    def getVocabSize(self):
+        return self.num_words
+    
+    def getTagSize(self):
+        return self.num_tags
 
-        # here we take each ord from words list and then find its root word
-    words = [stemmer.stem(w.lower()) for w in words]
-    words = sorted(list(set(words)))
-
-    labels = sorted(labels)
-
-    training = []
-    output = []
-
-    out_empty = [0 for _ in range(len(labels))]
-
-    for x, doc in enumerate(docs_patt):
-        bag = []
-
-        wrds = [stemmer.stem(w.lower()) for w in doc]
-
-        for w in words:
-            if w in wrds:
-                bag.append(1)
-            else:
-                bag.append(0)
-        output_row = out_empty[:]
-        output_row[labels.index(docs_tag[x])] = 1
-
-        training.append(bag)
-        output.append(output_row)
-
-    training = numpy.array(training)
-    output = numpy.array(output)
-
-    with open("data.pickle", "wb") as f:
-        pickle.dump((words, labels, training, output), f)
-
-
-net = tflearn.input_data(shape=[None, len(training[0])])
-net = tflearn.fully_connected(net, 8)
-net = tflearn.fully_connected(net, 8)
-net = tflearn.fully_connected(net, len(output[0]), activation="softmax")
-net = tflearn.regression(net)
-
-model = tflearn.DNN(net)
-
-try:
-    model.load("model.tflearn")
-except:
-    model = tflearn.DNN(net)
-    model.fit(training, output, n_epoch=1000, batch_size=8, show_metric=True)
-    model.save("model.tflearn")
-
-def bag_of_words(s, words):
-    bag = [0 for _ in range(len(words))]
-
-    s_words = nltk.word_tokenize(s)
-    s_words = [stemmer.stem(word.lower()) for word in s_words]
-
-    for se in s_words:
-        for i, w in enumerate(words):
-            if w == se:
-                bag[i] = 1
-
-    return numpy.array(bag)
+    def addResponse(self, tag, responses):
+        self.response[tag]=responses
+        
+        
+        
+with open("mydata.pickle", "rb") as f:
+    data = pickle.load(f)
 
 
 
+def predict(ques):
+    ques= data.getQuestionInNum(ques)
+    ques=numpy.array(ques)
+   # ques=ques/255
+    ques = numpy.expand_dims(ques, axis = 0)
+    y_pred = model.predict(ques)
+    res=numpy.argmax(y_pred, axis=1)
+    return res
+    
 
-# this fuction creates list of words from the sentence
-def words_to_list(s):
-    a = []
-    ns = ""
-    s = s + " " 
-    for i in range(len(s)):
-        if s[i] == " ":
-            a.append(ns)
-            ns = ""
-        else:
-            ns = ns + s[i]
-    a = list(set(a))
-    return a
-
-# pass the file in this fuction to create a dictionary of unique vocabulary
-def json_to_dictionary(data):
-    dictionary = []
-    fil_dict= []
-    vocalubary = []
-    for i in data["intents"]:
-        for pattern in i["patterns"]:
-            vocalubary.append(pattern.lower())
-    for i in vocalubary:
-        dictionary.append(words_to_list(i))
-    for i in range(len(dictionary)):
-        for word in dictionary[i]:
-            fil_dict.append(word)
-    return list(set(fil_dict))
-
-# this fuction checks the spelling in the sentence
-chatbot_vocabulary = json_to_dictionary(data)
-
-def word_checker(s):
-    correct_string = ""
-    for word in s.casefold().split():
-        if word not in chatbot_vocabulary:
-            suggestion = difflib.get_close_matches(word, chatbot_vocabulary)
-            for x in suggestion:
-                pass
-            if len(suggestion) == 0:
-                pass
-            else:
-                correct_string = correct_string + " " + str(suggestion[0])
-        else:
-            correct_string = correct_string + " " + str(word)
-
-    return correct_string 
-
+def getresponse(results):
+    tag= data.index2tags[int(results)]
+    response= data.response[tag]
+    return response
 
 def chat(inp):
     while True:
-        if inp.lower() == "bye":
-            return "Good Bye!"
-            
-        
-        inp_x = word_checker(inp)
-        print(inp_x)
-
-        results = model.predict([bag_of_words(inp_x, words)])[0]
-        results_index = numpy.argmax(results)
-        tag = labels[results_index]
-        print(results[results_index])
-
-        if inp == "":
-            return "Hey ask me some questions like...courses available at GEC?  "
-        elif results[results_index] >= 1.0:
-            for tg in data["intents"]:
-                if tg['tag'] == tag:
-                    responses = tg['responses']
-            return random.choice(responses)
-
-        else:
-            return "Sorry, I don't know how to answer that yet "
+        inp_x=inp.lower()
+        results = predict(inp_x)
+        response= getresponse(results)
+        return response[0]
 
 @app.route("/")
 def home():
