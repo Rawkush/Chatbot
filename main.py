@@ -1,5 +1,3 @@
-
-from sklearn.preprocessing import OneHotEncoder
 from spacy.lang.en import English
 import numpy
 from flask import Flask, render_template, request
@@ -57,7 +55,6 @@ class voc:
     
     def getQuestionInNum(self, ques):
         words=self.tokenization(ques)
-        #tmp=[ self.getIndexOfWord(wrds) for wrds in words]
         tmp=[ 0 for i in range(self.num_words)]
         for wrds in words:
             tmp[self.getIndexOfWord(wrds)]=1
@@ -65,7 +62,9 @@ class voc:
     
  
     def getTag(self, tag):
-        return self.tags[tag]
+        tmp=[0.0 for i in range(self.num_tags)]
+        tmp[self.tags[tag]]=1.0
+        return tmp
     
     def getVocabSize(self):
         return self.num_words
@@ -75,8 +74,7 @@ class voc:
 
     def addResponse(self, tag, responses):
         self.response[tag]=responses
-        
-        
+                
         
 with open("mydata.pickle", "rb") as f:
     data = pickle.load(f)

@@ -1,6 +1,5 @@
 import numpy
 import json
-from sklearn.preprocessing import OneHotEncoder
 from spacy.lang.en import English
 import tensorflow as tf
 from tensorflow.keras import layers, models, regularizers
@@ -10,12 +9,6 @@ nlp = English()
 tokenizer = nlp.Defaults.create_tokenizer(nlp)
 with open("intents.json") as file:
     raw_data = json.load(file)
-
-#print(data)
-
-PAD_Token=0
-MAX_LENGTH=12
-
 
 
 class voc:
@@ -57,7 +50,6 @@ class voc:
     
     def getQuestionInNum(self, ques):
         words=self.tokenization(ques)
-        #tmp=[ self.getIndexOfWord(wrds) for wrds in words]
         tmp=[ 0 for i in range(self.num_words)]
         for wrds in words:
             tmp[self.getIndexOfWord(wrds)]=1
@@ -65,7 +57,9 @@ class voc:
     
  
     def getTag(self, tag):
-        return self.tags[tag]
+        tmp=[0.0 for i in range(self.num_tags)]
+        tmp[self.tags[tag]]=1.0
+        return tmp
     
     def getVocabSize(self):
         return self.num_words
@@ -81,8 +75,7 @@ def splitDataset(data):
     x_train=[ data.getQuestionInNum(x) for x in data.questions]
     y_train=[data.getTag(data.questions[x]) for x in data.questions]
     return x_train,y_train
-
-    
+  
         
 
 data=voc()
@@ -102,11 +95,12 @@ y_train=numpy.array(y_train)
 #normalize
 #x_train=x_train/255
 #reshape ytrain
+'''
 y_train = y_train.reshape((len(y_train), 1))
 
 encoder = OneHotEncoder(sparse=False)
 y_train=encoder.fit_transform(y_train)
-
+'''
 
 
 #intialising the ANN
