@@ -16,34 +16,23 @@ College Enquiry Assistant is an AI powered chatbot aimed to provide answers to u
 
 
 # Tools and Library Required
-  - anaconda  with python >= 3.6
+  - anaconda  with python = 3.6 // higher or lower version may cause app to misbehave
   - tensorflow >=2.0
-  - tflearn
   - numpy
- 
-> when excuting for the first time make sure  to execute the following code in python bash
-```
->>import nltk
->>nltk.download('punkt')
-```
+
 
 ### Installation
 
 Install the dependencies by executing following commands.
 
-- install tensorflow
-    ```sh
-    $ pip install tensorflow
+- install via requirement.txt 
+    ```
+    $ pip install -r requirement.txt 
     ```
 - flask
     ```
     $ pip install Flask
     ```
-- tflearn
-    ```
-    $ pip install tflearn
-    ```
-
 
 
 ### Development
