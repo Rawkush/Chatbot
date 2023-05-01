@@ -1,5 +1,5 @@
 xgboost
-Flask==1.0.2
+Flask==2.3.2
 Flask-RESTful==0.3.6
 Flask-SQLAlchemy==2.3.2
 gunicorn==19.9.0
